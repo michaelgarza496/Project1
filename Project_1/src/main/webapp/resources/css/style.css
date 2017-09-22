@@ -1,0 +1,30 @@
+@CHARSET "ISO-8859-1";
+
+#bodyTag{
+	background-image: url("../imgs/employeeHomePageBackground.jpg");
+    background-color: black;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.jumbotron{
+	max-width: 400px;
+    min-width: 400px;
+    max-height: 260px;
+    min-height: 260px;
+    padding: 10px;
+    color: blue;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    font-size: large;
+    font-variant: small-caps;
+}
+
+#loginPageBody{
+	background-image: url("../imgs/loginDoor.png");
+	background-color: black;
+	background-repeat: no-repeat;
+	background-size: cover;
+	
+}
