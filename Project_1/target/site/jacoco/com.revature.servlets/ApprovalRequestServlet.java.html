@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApprovalRequestServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Project_1</a> &gt; <a href="index.source.html" class="el_package">com.revature.servlets</a> &gt; <span class="el_source">ApprovalRequestServlet.java</span></div><h1>ApprovalRequestServlet.java</h1><pre class="source lang-java linenums">package com.revature.servlets;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.revature.pojos.Reimbursement;
+import com.revature.pojos.User;
+import com.revature.services.Services;
+
+@WebServlet(&quot;/submitApproval&quot;)
+<span class="nc" id="L18">public class ApprovalRequestServlet extends HttpServlet{</span>
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+<span class="nc" id="L21">		System.out.println(&quot;ApprovalRequestServlet - POST&quot;);</span>
+		
+<span class="nc" id="L23">		List&lt;Reimbursement&gt; approval = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L24">		User user = (User) req.getSession().getAttribute(&quot;user&quot;);</span>
+		
+<span class="nc" id="L26">		System.out.println(req.getParameter(&quot;numberOfSelects&quot;));</span>
+<span class="nc" id="L27">		int numOfSelects = Integer.parseInt(req.getParameter(&quot;numberOfSelects&quot;));</span>
+<span class="nc" id="L28">		System.out.println(&quot;numOfSelects: &quot; + numOfSelects);</span>
+		int reqId;
+		int statusId;
+<span class="nc" id="L31">		int resolver = 0;</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">		for(int i = 0; i &lt; numOfSelects; i++){</span>
+			
+<span class="nc" id="L34">			reqId = Integer.parseInt( req.getParameter( Integer.toString(i) ).substring(1) );</span>
+<span class="nc" id="L35">			System.out.println(&quot;reqId: &quot; + reqId);</span>
+			
+<span class="nc" id="L37">			statusId = Integer.parseInt( req.getParameter( Integer.toString(i) ).substring(0, 1) );</span>
+<span class="nc" id="L38">			System.out.println(&quot;statusId: &quot; + statusId);</span>
+<span class="nc bnc" id="L39" title="All 4 branches missed.">			if(statusId == 1 || statusId == 2){</span>
+<span class="nc" id="L40">				resolver = user.getUserId();</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">			}else if(statusId == 3){</span>
+<span class="nc" id="L42">				resolver = 0;</span>
+<span class="nc" id="L43">				continue;</span>
+			}
+<span class="nc" id="L45">			System.out.println(&quot;Adding to approval list&quot;);</span>
+<span class="nc" id="L46">			approval.add( new Reimbursement(reqId, statusId, &quot;&quot;, 0, &quot;&quot;, 0.0, &quot;&quot;, &quot;&quot;, 0, &quot;&quot;, resolver, &quot;&quot;, &quot;&quot;));</span>
+		}
+		
+		
+<span class="nc" id="L50">		new Services().updateAllApprovals(approval);</span>
+<span class="nc" id="L51">		resp.sendRedirect(&quot;app.html&quot;);</span>
+<span class="nc" id="L52">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

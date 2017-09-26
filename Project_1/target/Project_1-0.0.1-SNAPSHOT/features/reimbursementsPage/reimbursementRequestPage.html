@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<link rel="stylesheet" href="features/reimbursementsPage/reimbursementRequest_style.css" type="text/css">
+
+<div id="formBackground">
+	<h1>Reimbursement Page</h1>
+<form method="POST" action="submitReimbursementRequest" enctype="multipart/form-data">
+		Request Type<br> <select name="reqType" class="requestInput">
+			<option value="1">Food</option>
+			<option value="2">Lodging</option>
+			<option value="3">Airfare</option>
+			<option value="4">Boston Stapler</option>
+		</select> <br>
+		<br> Amount:<br> <input type="number" class="requestInput"
+			name="amount" min="0.01" step="0.01" max="10000.00"><br>
+		<br> Description:<br> <input type="text"
+			class="requestInput" id="descriptionTxtBox" name="description">
+			
+			<br><br>
+			Please upload a picture of your receipt:<br>
+			<input type="file" name="receiptImage" accept='image/jpeg,image/gif,image/png'>
+			<br><br>
+			
+			<input type="submit" id="submitRequest" style="    width: 400px;
+    height: 50px;
+    background-color: #151594;
+    color: white;
+    text-transform: uppercase;
+    font-family: sans-serif;
+    border-radius: 200px;">
+</form>
+</div>

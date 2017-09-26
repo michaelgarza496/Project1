@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AjaxSubmitReimbursementRequestServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Project_1</a> &gt; <a href="index.source.html" class="el_package">com.revature.servlets</a> &gt; <span class="el_source">AjaxSubmitReimbursementRequestServlet.java</span></div><h1>AjaxSubmitReimbursementRequestServlet.java</h1><pre class="source lang-java linenums">package com.revature.servlets;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import com.revature.pojos.Reimbursement;
+import com.revature.pojos.User;
+import com.revature.services.Services;
+
+@MultipartConfig(maxFileSize = 16177215)
+@WebServlet(&quot;/submitReimbursementRequest&quot;)
+<span class="nc" id="L20">public class AjaxSubmitReimbursementRequestServlet extends HttpServlet{</span>
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+<span class="nc" id="L24">		System.out.println(&quot;AjaxSubmitReimbursementRequestServlet - GET&quot;);</span>
+		
+<span class="nc" id="L26">		Reimbursement rb = new Reimbursement();</span>
+<span class="nc" id="L27">		User user = (User) req.getSession().getAttribute(&quot;user&quot;);</span>
+//		public Reimbursement(int statusId, int typeId, double amount, int authorId, String description) {
+		
+<span class="nc" id="L30">		rb.setStatusId(3);</span>
+<span class="nc" id="L31">		System.out.println(Integer.parseInt(req.getParameter(&quot;reqType&quot;)));</span>
+<span class="nc" id="L32">		rb.setTypeId(Integer.parseInt(req.getParameter(&quot;reqType&quot;)));</span>
+<span class="nc" id="L33">		rb.setAmount(Double.parseDouble(req.getParameter(&quot;amount&quot;)));</span>
+<span class="nc" id="L34">		rb.setAuthorId(user.getUserId());</span>
+<span class="nc" id="L35">		rb.setDescription(req.getParameter(&quot;description&quot;));</span>
+		
+		//trying for image
+<span class="nc" id="L38">		InputStream inputStream = null; // input stream of the upload file</span>
+        // obtains the upload file part in this multipart request
+<span class="nc" id="L40">        Part filePart = req.getPart(&quot;receiptImage&quot;);</span>
+//		rb.setReceipt(req.getParameter(&quot;receiptImage&quot;));
+<span class="nc" id="L42">        inputStream = filePart.getInputStream();</span>
+<span class="nc" id="L43">        rb.setInputStream(inputStream);</span>
+		
+<span class="nc" id="L45">		new Services().persistRequest(rb);</span>
+<span class="nc" id="L46">		resp.sendRedirect(&quot;app.html&quot;);</span>
+		
+<span class="nc" id="L48">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

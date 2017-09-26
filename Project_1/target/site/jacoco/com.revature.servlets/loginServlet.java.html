@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>loginServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Project_1</a> &gt; <a href="index.source.html" class="el_package">com.revature.servlets</a> &gt; <span class="el_source">loginServlet.java</span></div><h1>loginServlet.java</h1><pre class="source lang-java linenums">package com.revature.servlets;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.revature.pojos.User;
+import com.revature.services.Services;
+
+
+@WebServlet(&quot;/index&quot;)
+<span class="nc" id="L17">public class loginServlet extends HttpServlet{</span>
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7276104988131879746L;
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+<span class="nc" id="L27">		resp.setHeader(&quot;Cache-Control&quot;,&quot;no-cache&quot;); //Forces caches to obtain a new copy of the page from the origin server</span>
+<span class="nc" id="L28">		resp.setHeader(&quot;Cache-Control&quot;,&quot;no-store&quot;); //Directs caches not to store the page under any circumstance</span>
+
+<span class="nc" id="L30">		System.out.println(&quot;LoginServlet - POST&quot;);</span>
+		
+		//create a user object
+<span class="nc" id="L33">		User clientUser = new User();</span>
+
+		//get the email and password supplied in the login page
+<span class="nc" id="L36">		String email = req.getParameter(&quot;email&quot;);</span>
+<span class="nc" id="L37">		String password = req.getParameter(&quot;password&quot;);</span>
+		
+		//set the email and password to the user object
+<span class="nc" id="L40">		clientUser.setEmail(email);</span>
+<span class="nc" id="L41">		clientUser.setPassword(password);</span>
+		
+		//authenticate user
+<span class="nc" id="L44">		clientUser = new Services().authenticateUser(clientUser);// Either receive a valid user or null</span>
+		
+//		System.out.println(clientUser);
+//		System.out.println(&quot;The user entered: &quot; + email + &quot; with a password of &quot; + password);
+		
+<span class="nc bnc" id="L49" title="All 2 branches missed.">		if(clientUser != null){</span>
+<span class="nc" id="L50">			System.out.println(&quot;clientUser != null&quot;);</span>
+			
+<span class="nc" id="L52">			HttpSession session = req.getSession(true); //j_session_id stored in a cookie on the client's browser</span>
+<span class="nc" id="L53">			session.setAttribute(&quot;user&quot;, clientUser); //The parameters: name, and the actual object that you want to store in the session</span>
+
+<span class="nc" id="L55">			clientUser = null;</span>
+
+<span class="nc" id="L57">			resp.sendRedirect(&quot;app.html&quot;);</span>
+
+			
+			
+<span class="nc" id="L61">		}else{</span>
+<span class="nc" id="L62">			resp.sendRedirect(&quot;index.html&quot;);</span>
+		}
+<span class="nc" id="L64">	}</span>
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+<span class="nc" id="L68">		resp.setHeader(&quot;Cache-Control&quot;,&quot;no-cache&quot;); //Forces caches to obtain a new copy of the page from the origin server</span>
+<span class="nc" id="L69">		resp.setHeader(&quot;Cache-Control&quot;,&quot;no-store&quot;); //Directs caches not to store the page under any circumstance</span>
+<span class="nc" id="L70">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReimbursementDaoImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Project_1</a> &gt; <a href="index.source.html" class="el_package">com.revature.dao</a> &gt; <span class="el_source">ReimbursementDaoImpl.java</span></div><h1>ReimbursementDaoImpl.java</h1><pre class="source lang-java linenums">package com.revature.dao;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.DatatypeConverter;
+
+import com.revature.pojos.Reimbursement;
+import com.revature.pojos.User;
+
+<span class="nc" id="L18">public class ReimbursementDaoImpl implements ReimbursementDao{</span>
+	private static final String USERNAME = &quot;shartywaffles&quot;;
+	private static final String PASSWORD = &quot;p4ssw0rd&quot;;
+	private static final String URL = &quot;jdbc:oracle:thin:@testdb.cjtyi0m7ybgn.us-east-2.rds.amazonaws.com:1521:ORCL&quot;;
+	
+	@Override
+	public void saveReimbursementRequest(Reimbursement rb) {
+<span class="nc" id="L25">		System.out.println(&quot;ReimbursementDaoImpl - saveReimbursementRequest&quot;);</span>
+		
+<span class="nc" id="L27">		String sql = &quot;INSERT INTO REIMBURSEMENT VALUES(null, ?, ?, ?, ?, null, null, ?, 0, ?)&quot;;</span>
+		
+		// Connect to the database
+<span class="nc" id="L30">		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {</span>
+
+			
+//			R_ID
+//			R_STATUS_ID
+//			R_TYPE_ID
+//			R_RECEIPT
+//			R_AMOUNT
+//			R_SUBMITTED
+//			R_RESOLVED
+//			R_AUTHOR
+//			R_RESOLVER
+//			R_DESCRIPTION
+			// prepare the statement to send to database
+<span class="nc" id="L44">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="nc" id="L45">			ps.setInt(1, rb.getStatusId());</span>
+<span class="nc" id="L46">			ps.setInt(2, rb.getTypeId());</span>
+<span class="nc" id="L47">			ps.setDouble(4, rb.getAmount());</span>
+<span class="nc" id="L48">			ps.setBlob(3, rb.getInputStream());</span>
+<span class="nc" id="L49">			ps.setInt(5, rb.getAuthorId());</span>
+<span class="nc" id="L50">			ps.setString(6, rb.getDescription());</span>
+//ps.setBlob(parameterIndex, inputStream);
+			// execute query
+<span class="nc" id="L53">			ps.executeQuery();</span>
+			
+
+<span class="nc bnc" id="L56" title="All 8 branches missed.">		} catch (SQLException e) {</span>
+<span class="nc" id="L57">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L59">	}</span>
+
+	@Override
+	public List&lt;Reimbursement&gt; getReimbursementByUser(User user) {
+<span class="nc" id="L63">		System.out.println(&quot;ReimbursementDaoImpl - getReimbursementById&quot;);</span>
+		
+<span class="nc" id="L65">		List&lt;Reimbursement&gt; rb = new ArrayList&lt;&gt;();;</span>
+		
+		//SQL Statement
+//		String sql = &quot;SELECT * FROM REIMBURSEMENT R WHERE R.R_AUTHOR = (SELECT U_ID FROM USERS WHERE U_ID = ?)&quot;;
+<span class="nc" id="L69">		String sql = &quot;SELECT REIMBURSEMENT.*, R_STATUS.R_STATUS, R_TYPE.R_TYPE, RES.FIRST_NAME, RES.LAST_NAME FROM ((((REIMBURSEMENT &quot;</span>
+				+ &quot;INNER JOIN R_STATUS ON REIMBURSEMENT.R_STATUS_ID = R_STATUS.R_STATUS_ID) &quot;
+				+ &quot;INNER JOIN R_TYPE ON REIMBURSEMENT.R_TYPE_ID = R_TYPE.R_TYPE_ID) &quot;
+				+ &quot;INNER JOIN USERS ON USERS.U_ID = ?) &quot;
+				+ &quot;INNER JOIN USERS RES ON REIMBURSEMENT.R_RESOLVER = RES.U_ID) &quot;
+				+ &quot;WHERE REIMBURSEMENT.R_AUTHOR = ?&quot;;
+		
+		//Prepared Statement
+		// Connect to the database
+<span class="nc" id="L78">		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {</span>
+<span class="nc" id="L79">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="nc" id="L80">			ps.setInt(1, user.getUserId());</span>
+<span class="nc" id="L81">			ps.setInt(2, user.getUserId());</span>
+			
+			//execute query
+<span class="nc" id="L84">			ResultSet rs = ps.executeQuery();</span>
+//R_ID, R_STATUS_ID, R_TYPE_ID, R_RECEIPT, R_AMOUNT, R_SUBMITTED, R_RESOLVED, R_AUTHOR, R_RESOLVER, R_DESCRIPTION, R_STATUS, R_TYPE, FIRST_NAME, LAST_NAME
+			//put values in new user object if found
+<span class="nc bnc" id="L87" title="All 2 branches missed.">			while(rs.next()){</span>
+<span class="nc" id="L88">				rb.add(new Reimbursement(rs.getInt(1), rs.getInt(2), rs.getString(11), rs.getInt(3), rs.getString(12), rs.getDouble(5), rs.getString(6).substring(0, rs.getString(6).length()-10), </span>
+<span class="nc" id="L89">						rs.getString(7), rs.getInt(8), user.getFirstName() + &quot; &quot; + user.getLastName(), rs.getInt(9), rs.getString(13) + &quot; &quot; + rs.getString(14), </span>
+<span class="nc" id="L90">						rs.getString(10)));</span>
+//				System.out.println(rb.get(0));
+			}
+		
+//			R_ID
+//			R_STATUS_ID
+//			R_TYPE_ID
+//			R_RECEIPT
+//			R_AMOUNT
+//			R_SUBMITTED
+//			R_RESOLVED
+//			R_AUTHOR
+//			R_RESOLVER
+//			R_DESCRIPTION
+<span class="nc bnc" id="L104" title="All 8 branches missed.">		} catch (SQLException e) {</span>
+<span class="nc" id="L105">			e.printStackTrace();</span>
+		}
+//		System.out.println(rb);	
+<span class="nc" id="L108">		return rb; </span>
+	}
+
+	@Override
+	public List&lt;Reimbursement&gt; getAllReimbursementsForManager() {
+<span class="nc" id="L113">		System.out.println(&quot;getAllReimbursementsForManager&quot;);</span>
+		
+<span class="nc" id="L115">		List&lt;Reimbursement&gt; allReimbursements = new ArrayList&lt;&gt;();</span>
+		
+<span class="nc" id="L117">		String sql = &quot;SELECT reimbursement.*, auth_user.first_name AS author_first, auth_user.last_name AS author_last, &quot;</span>
+				+ &quot;res_user.first_name as reslover_first, res_user.last_name as resolver_last, &quot;
+				+ &quot;status.r_status, r_type.r_type FROM ((((reimbursement &quot;
+				+ &quot;INNER JOIN users auth_user ON auth_user.u_id = reimbursement.r_author) &quot;
+				+ &quot;INNER JOIN users res_user ON reimbursement.r_resolver = res_user.u_id) &quot;
+				+ &quot;INNER JOIN r_status status ON reimbursement.r_status_id = status.r_status_id) &quot;
+				+ &quot;INNER JOIN r_type ON reimbursement.r_type_id = r_type.r_type_id)&quot;;
+		
+<span class="nc" id="L125">		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {</span>
+<span class="nc" id="L126">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+			
+			//execute query
+<span class="nc" id="L129">			ResultSet rs = ps.executeQuery();</span>
+
+//R_ID 1, R_STATUS_ID 2, R_TYPE_ID 3, R_RECEIPT 4, R_AMOUNT 5, 
+//R_SUBMITTED 6, R_RESOLVED 7, R_AUTHOR 8, R_RESOLVER 9, R_DESCRIPTION 10, 
+//AUTHOR_FIRST 11, AUTHOR_LAST 12, RESLOVER_FIRST 13, RESOLVER_LAST 14, R_STATUS 15
+//r_type 16
+			
+//			public Reimbursement(int reimbursementId, int statusId, String status, int typeId, String type, double amount,
+//					String timeSubmitted, String resolved, int authorId, String author, int resolverId, String resolver,
+//					String description) {
+<span class="nc bnc" id="L139" title="All 2 branches missed.">			while(rs.next()){</span>
+				String resolved;
+<span class="nc bnc" id="L141" title="All 4 branches missed.">				if(rs.getString(7) == null || rs.getString(7) == &quot;&quot;){</span>
+<span class="nc" id="L142">					resolved = &quot;Not resolved&quot;;</span>
+<span class="nc" id="L143">				}else{</span>
+<span class="nc" id="L144">					resolved = rs.getString(7).substring(0, rs.getString(7).length()-10);</span>
+				}
+				
+<span class="nc" id="L147">				allReimbursements.add(new Reimbursement(rs.getInt(1), rs.getInt(2), rs.getString(15), rs.getInt(3), rs.getString(16), rs.getDouble(5), </span>
+<span class="nc" id="L148">						rs.getString(6).substring(0, rs.getString(6).length()-10), resolved, </span>
+<span class="nc" id="L149">						rs.getInt(8), rs.getString(11) + &quot; &quot; + rs.getString(12), rs.getInt(9), rs.getString(13) + &quot; &quot; + rs.getString(14), </span>
+<span class="nc" id="L150">						rs.getString(10)));</span>
+//				System.out.println(allReimbursements.get(0));
+			}
+<span class="nc bnc" id="L153" title="All 8 branches missed.">			} catch (SQLException e) {</span>
+<span class="nc" id="L154">				e.printStackTrace();</span>
+			}
+//			System.out.println(allReimbursements);	
+		
+<span class="nc" id="L158">		return allReimbursements;</span>
+	}
+
+	@Override
+	public List&lt;Reimbursement&gt; getAllPendingRequestsForManager() {
+<span class="nc" id="L163">		System.out.println(&quot;ReimbursementDaoImpl - getAllPendingRequestsForManager&quot;);</span>
+		
+<span class="nc" id="L165">		List&lt;Reimbursement&gt; pendingRequests = new ArrayList&lt;&gt;();</span>
+		
+<span class="nc" id="L167">		String sql = &quot;SELECT auth_user.first_name, auth_user.last_name, r_type.r_type, rb.r_submitted, rb.r_description, rb.r_amount, rb.r_author, rb.r_id &quot;</span>
+				+ &quot;FROM ((reimbursement rb &quot;
+				+ &quot;INNER JOIN users auth_user ON auth_user.u_id = rb.r_author) &quot;
+				+ &quot;INNER JOIN r_type ON rb.r_type_id = r_type.r_type_id) &quot;
+				+ &quot;WHERE rb.r_status_id = 3&quot;;
+		
+<span class="nc" id="L173">		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {</span>
+<span class="nc" id="L174">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+			
+			//execute query
+<span class="nc" id="L177">			ResultSet rs = ps.executeQuery();</span>
+
+//			FIRST_NAME, LAST_NAME, R_TYPE, R_SUBMITTED, R_DESCRIPTION, amount, author, id
+<span class="nc bnc" id="L180" title="All 2 branches missed.">			while(rs.next()){</span>
+				
+				
+<span class="nc" id="L183">				pendingRequests.add(new Reimbursement(rs.getInt(8), 0, &quot;&quot;, 0, rs.getString(3), rs.getDouble(6), </span>
+<span class="nc" id="L184">						rs.getString(4).substring(0, rs.getString(4).length()-10), &quot;&quot;, rs.getInt(7), rs.getString(1) + &quot; &quot; + rs.getString(2), 0, &quot;&quot;, rs.getString(5)));</span>
+//				System.out.println(pendingRequests.get(0));
+			}
+<span class="nc bnc" id="L187" title="All 8 branches missed.">			} catch (SQLException e) {</span>
+<span class="nc" id="L188">				e.printStackTrace();</span>
+			}
+//			System.out.println(pendingRequests);	
+		
+<span class="nc" id="L192">		return pendingRequests;</span>
+	}
+
+	@Override
+	public void updateApproval(List&lt;Reimbursement&gt; apprList) {
+<span class="nc" id="L197">		System.out.println(&quot;Updating Approvals&quot;);</span>
+		
+<span class="nc" id="L199">		String sql = &quot;UPDATE reimbursement SET r_status_id = ?, r_resolver = ? WHERE r_id = ?&quot;;</span>
+		
+<span class="nc" id="L201">		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {</span>
+			PreparedStatement ps;
+			
+<span class="nc bnc" id="L204" title="All 2 branches missed.">			for(int i = 0; i &lt; apprList.size(); i++){</span>
+<span class="nc" id="L205">				ps = conn.prepareStatement(sql);</span>
+<span class="nc" id="L206">				ps.setInt(1, apprList.get(i).getStatusId());</span>
+<span class="nc" id="L207">				ps.setInt(2, apprList.get(i).getResolverId());</span>
+<span class="nc" id="L208">				ps.setInt(3, apprList.get(i).getReimbursementId());</span>
+
+				//execute query
+<span class="nc" id="L211">				ResultSet rs = ps.executeQuery();</span>
+			}
+<span class="nc bnc" id="L213" title="All 8 branches missed.">		} catch (SQLException e) {</span>
+<span class="nc" id="L214">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L216">		System.out.println(&quot;Updated approvals&quot;);	</span>
+<span class="nc" id="L217">	}</span>
+
+	@Override
+	public Reimbursement getReceipt(Reimbursement r) {
+		
+<span class="nc" id="L222">		try(Connection connect = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {</span>
+		
+<span class="nc" id="L224">			String sql = &quot;SELECT r_receipt FROM reimbursement WHERE r_id = ?&quot;;</span>
+<span class="nc" id="L225">			PreparedStatement ps = connect.prepareStatement(sql);</span>
+<span class="nc" id="L226">			ps.setInt(1, r.getReimbursementId());</span>
+<span class="nc" id="L227">			ResultSet rs = ps.executeQuery();</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">			while(rs.next()){</span>
+<span class="nc" id="L229">				System.out.println(&quot;Found image for r_id: &quot; + r.getReimbursementId());</span>
+<span class="nc" id="L230">				return new Reimbursement(rs.getBytes(1));</span>
+			}
+<span class="nc bnc" id="L232" title="All 10 branches missed.">		} catch (SQLException e) {</span>
+<span class="nc" id="L233">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L235">		return null;</span>
+	}
+
+
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

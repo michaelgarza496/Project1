@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AjaxNavBarServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Project_1</a> &gt; <a href="index.source.html" class="el_package">com.revature.servlets</a> &gt; <span class="el_source">AjaxNavBarServlet.java</span></div><h1>AjaxNavBarServlet.java</h1><pre class="source lang-java linenums">package com.revature.servlets;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.revature.pojos.User;
+
+@WebServlet(&quot;/getNavBar&quot;)
+<span class="nc" id="L14">public class AjaxNavBarServlet extends HttpServlet {</span>
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2285341946907233363L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+<span class="nc" id="L23">		System.out.println(&quot;NavBarServlet - GET&quot;);</span>
+		
+<span class="nc bnc" id="L25" title="All 2 branches missed.">		if (((User) req.getSession().getAttribute(&quot;user&quot;)).getUserRoldId() == 1) {</span>
+<span class="nc" id="L26">			req.getRequestDispatcher(&quot;features/navbar/employeeNavBar.html&quot;).forward(req, resp);</span>
+<span class="nc" id="L27">			System.out.println(&quot;NavBarServlet - Employee NavBar&quot;);</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">		}else if(((User) req.getSession().getAttribute(&quot;user&quot;)).getUserRoldId() == 2){</span>
+<span class="nc" id="L29">			System.out.println(&quot;NavBarServlet - Manager NavBar&quot;);</span>
+<span class="nc" id="L30">			req.getRequestDispatcher(&quot;features/navbar/managerNavBar.html&quot;).forward(req, resp);</span>
+		}
+<span class="nc" id="L32">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
